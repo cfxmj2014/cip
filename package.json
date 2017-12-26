@@ -4,7 +4,8 @@
   "description": "continuous integration platform cli",
   "main": "index.js",
   "bin": {
-    "cip": "bin/index.js"
+    "cip": "bin/cip",
+    "cip-init": "bin/cip-init"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,7 +13,10 @@
   "author": "JRFE",
   "license": "ISC",
   "dependencies": {
-    "chalk": "^1.1.1",
-    "commander": "^2.12.2"
+    "chalk": "^2.3.0",
+    "commander": "^2.12.2",
+    "download-git-repo": "^1.0.1",
+    "ora": "^1.3.0",
+    "rimraf": "^2.6.2"
   }
 }

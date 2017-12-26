@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var program = require('commander');
+var chalk = require('chalk');
+var download = require('download-git-repo');
+var ora = require('ora');
+var exists = require('fs').existsSync;
+var rm = require('rimraf').sync;
+var config = require('../util/config');
+
+program
+  .usage('[project-name]')
+  .on('--help', function() {
+    console.log('  Examples:')
+    console.log()
+    console.log(chalk.gray('    # create a new project with an official template'))
+    console.log('    $ cip init my-project')
+    console.log()
+  })
+
+program.parse(process.argv)
+
+if (program.args.length < 1) return program.help()
+
+var dest = program.args[0];
+
+var spinner = ora('downloading template...');
+
+spinner.start();
+
+if (exists(dest)) rm(dest);
+
+download(config.template, dest, { clone: true }, function (err) {
+  spinner.stop();
+
+  console.log(err ? err : 'download template success!');
+})
