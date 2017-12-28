@@ -4,10 +4,10 @@
 
 var program = require('commander');
 var chalk = require('chalk');
-var download = require('download-git-repo');
-var ora = require('ora');
 var exists = require('fs').existsSync;
 var rm = require('rimraf').sync;
+var shell = require('shelljs');
+var gitclone = require('git-clone');
 var config = require('../util/config');
 
 program
@@ -26,14 +26,20 @@ if (program.args.length < 1) return program.help()
 
 var dest = program.args[0];
 
-var spinner = ora('downloading template...');
+if (!shell.which('git')) {
+  shell.echo('Sorry, this script requires git');
+  shell.exit(1);
+}
 
-spinner.start();
+console.log('git clone template:' + config.template);
 
 if (exists(dest)) rm(dest);
 
-download(config.template, dest, { clone: true }, function (err) {
-  spinner.stop();
-
-  console.log(err ? err : 'download template success!');
+gitclone(config.template, dest, function(err) {
+  if (err === undefined) {
+    rm(dest + '/.git');
+    console.log('git clone success');
+  } else {
+    console.log(err);
+  }
 })
